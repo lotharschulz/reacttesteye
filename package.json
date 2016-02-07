@@ -1,0 +1,15 @@
+{
+  "name": "reacttest04",
+  "version": "0.0.0",
+  "description": "test03",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7"
+  }
+}
