@@ -1,15 +1,33 @@
 // https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=[api_key]&photoset_id=[photoset_id]&user_id=[user_id]&format=json&per_page=21&page=1&extras=url_o,url_m,url_l,url_c
 import React from 'react';
+import ReactDOM from 'react-dom';
+import Gallery from 'react-photo-gallery';
+import $ from 'jquery';
+import _ from 'lodash';
 
 class App extends React.Component {
   //https://github.com/neptunian/react-photo-gallery
   constructor(){
     super();
-          this.state = {photos:null, pageNum:1, totalPages:1, loadedAll: false};
-    //this.handleScroll = this.handleScroll.bind(this);
+    this.state = {photos:null, pageNum:1, totalPages:1, loadedAll: false};
+    this.handleScroll = this.handleScroll.bind(this);
     this.loadMorePhotos = this.loadMorePhotos.bind(this);
+    this.flickrurl = 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=372ef3a005d9b9df062b8240c326254d&photoset_id=72157631971715898&user_id=57933175@N08&format=json&per_page=21&page='
+    this.flickrurlParam = '&extras=url_o,url_m,url_l,url_c'
+    console.debug(this.flickrurl)
+    console.debug(this.flickrurlParam)
   } // constructor
 
+  componentDidMount() {
+      this.loadMorePhotos();
+      this.loadMorePhotos = _.debounce(this.loadMorePhotos, 200);
+      window.addEventListener('scroll', this.handleScroll);
+  } // componentDidMount
+  handleScroll(){
+      if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 50)) {
+          this.loadMorePhotos();
+      }
+  } // handleScroll
 
   loadMorePhotos(e){
       if (e){
@@ -20,7 +38,7 @@ class App extends React.Component {
         return;
       }
       $.ajax({
-        url: 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=372ef3a005d9b9df062b8240c326254d&photoset_id=72157631971715898&user_id=57933175@N08&format=json&per_page=21&page='+this.state.pageNum+'&extras=url_o,url_m,url_l,url_c',
+        url: this.flickrurl+this.state.pageNum+this.flickrurlParam,
         dataType: 'jsonp',
         jsonpCallback: 'jsonFlickrApi',
         cache: false,
@@ -32,7 +50,7 @@ class App extends React.Component {
                   width: parseInt(obj.width_o),
                   height: parseInt(obj.height_o),
                   aspectRatio: aspectRatio,
-                  lightboxImage:{src: obj.url_l}
+                  src: obj.url_l
               };
           });
           this.setState({
@@ -41,14 +59,43 @@ class App extends React.Component {
             totalPages: data.photoset.pages
           });
         }.bind(this),
-        error: function(xhr, status, err) {
-          console.error(status, err.toString());
-        }.bind(this)
-      });
+          error: function(xhr, status, err) {
+            console.error(status, err.toString());
+          }.bind(this)
+        });
   }  // loadMorePhotos
 
-  render() {
-    return <div>Hello</div>
-  }
+  renderGallery(){
+    return(
+        <Gallery photos={this.state.photos}/>
+    );
+  } // renderGallery
+
+  render(){
+      // no loading sign if its all loaded
+        if (this.state.photos && this.state.loadedAll){
+            return(
+              <div>
+                  {this.renderGallery()}
+              </div>
+            );
+        }
+      else if (this.state.photos){
+          return(
+              <div>
+                  {this.renderGallery()}
+                <div className="loading-msg" id="msg-loading-more">Loading photos</div>
+              </div>
+          );
+      }
+      else{
+          return(
+              <div>
+                <div id="msg-app-loading" className="loading-msg">Loading . </div>
+              </div>
+          );
+      }
+  } // render
+
 }
 export default App
