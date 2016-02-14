@@ -91,7 +91,7 @@ class App extends React.Component {
       else{
           return(
               <div>
-                <div id="msg-app-loading" className="loading-msg">Loading . </div>
+                <div id="msg-app-loading" className="loading-msg">Loading <span class="one">.</span><span class="two">.</span><span class="three">.</span></div>
               </div>
           );
       }
