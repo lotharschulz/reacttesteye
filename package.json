@@ -7,7 +7,7 @@
     "start": "webpack-dev-server"
   },
   "author": "",
-  "license": "BSD-2-Clause",
+  "license": "",
   "dependencies": {
     "jquery": "^2.2.0",
     "lodash": "^4.3.0",
