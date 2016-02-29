@@ -2,7 +2,7 @@
   "name": "reacttest04",
   "version": "0.0.1",
   "description": "reacttesteye",
-  "main": "index.js",
+  "main": "eyecindex.js",
   "scripts": {
     "start": "webpack-dev-server"
   },

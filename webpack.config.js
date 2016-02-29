@@ -1,12 +1,12 @@
 module.exports = {
   entry: './main.js',
   output: {
-    path: './',
-    filename: 'index.js'
+    path: './target/',
+    filename: 'eyecindex.js'
   },
   devServer: {
     inline: true,
-    port: 3333
+    port: 4444
   },
   module: {
     loaders: [
